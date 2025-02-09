@@ -1,37 +1,141 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Interview Preparation Assistant
+
+An intelligent interview preparation tool that generates personalized interview questions and feedback based on your resume and job descriptions. Built with Next.js, OpenAI, and modern web technologies.
+
+## Features
+
+### 1. Smart Interview Generation
+- Upload your resume (PDF format)
+- Provide job posting URL
+- Select interview type (Technical, Behavioral, General)
+- AI-powered analysis of both resume and job description
+- Generates tailored interview questions and feedback
+
+### 2. Interactive Chat Interface
+- Real-time AI responses
+- Markdown formatting for clear structure
+- Smooth animations and transitions
+- Mobile-responsive design
+- Persistent chat history
+- Professional formatting with sections:
+  - Introduction
+  - Job Description Analysis
+  - Resume Review
+  - Interview Process
+  - Tailored Questions
+  - Initial Assessment
+
+### 3. Technical Features
+- PDF text extraction
+- Web scraping for job descriptions
+- OpenAI GPT integration
+- Real-time chat capabilities
+- Accessibility features
+- Dark/Light mode support
+
+## Tech Stack
+
+- **Frontend:**
+  - Next.js 13+ (App Router)
+  - React
+  - TypeScript
+  - TailwindCSS
+  - Shadcn/ui Components
+  - Framer Motion
+  - React Markdown
+
+- **Backend:**
+  - Next.js API Routes
+  - OpenAI API
+  - PDF.js for PDF processing
+  - Puppeteer for web scraping
+
+- **Development Tools:**
+  - ESLint
+  - Prettier
+  - TypeScript
+  - npm
 
 ## Getting Started
 
-First, run the development server:
-
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone [repository-url]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+# .env.local
+OPENAI_API_KEY=your_api_key_here
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server:
+```bash
+npm run dev
+```
 
-## Learn More
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+├── app/
+│   ├── api/
+│   │   ├── chat/
+│   │   └── prepare-interview/
+│   ├── chat/
+│   └── page.tsx
+├── components/
+│   └── ui/
+├── lib/
+│   └── pdfUtils.ts
+├── utils/
+│   └── jobScraper.ts
+└── public/
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Key Components
 
-## Deploy on Vercel
+### Home Page (`app/page.tsx`)
+- File upload interface
+- Job URL input
+- Interview type selection
+- Initial interview preparation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Chat Interface (`app/chat/page.tsx`)
+- Real-time chat with AI
+- Markdown rendering
+- Animated messages
+- Persistent chat history
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# ai-interviewer
+### API Routes
+- `/api/prepare-interview`: Initial interview setup
+- `/api/chat`: Ongoing conversation handling
+
+### Utilities
+- `pdfUtils.ts`: PDF text extraction
+- `jobScraper.ts`: Job description scraping
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- OpenAI for GPT API
+- Shadcn for UI components
+- PDF.js for PDF processing
+- Next.js team for the amazing framework
