@@ -60,7 +60,7 @@ An intelligent interview preparation tool that generates personalized interview 
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://github.com/KaranU26/ai-interviewer.git
 ```
 
 2. Install dependencies:
