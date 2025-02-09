@@ -11,7 +11,9 @@ interface JobData {
 export async function scrapeJobDescription(url: string): Promise<JobData> {
   let browser;
   try {
+    // Use Puppeteer in serverless environment
     browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
       headless: 'new'
     });
 
@@ -51,4 +53,6 @@ export async function scrapeJobDescription(url: string): Promise<JobData> {
       await browser.close();
     }
   }
-} 
+}
+
+// Remove or update the analyze-job.ts file if it's not needed 
