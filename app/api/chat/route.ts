@@ -1,17 +1,10 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+import openai from '../../../../lib/openaiClient';
+import { createErrorResponse } from '../../../../lib/apiUtils';
 
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
-
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key is not configured');
-    }
 
     // Create the system prompt
     const systemPrompt = `You are an experienced interviewer. Continue the interview based on the candidate's responses. 
@@ -33,21 +26,14 @@ export async function POST(req: Request) {
     // Get the response message
     const responseMessage = completion.choices[0].message.content;
     if (!responseMessage) {
-      throw new Error('No response received from OpenAI');
+      console.error('OpenAI Error: No response message content.');
+      return createErrorResponse('No response content received from OpenAI', 500, 'The message content was empty.');
     }
 
     return NextResponse.json({ message: responseMessage });
   } catch (error) {
     console.error('Chat API Error:', error);
-    let errorMessage = 'Failed to get response';
-    
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : 'An unknown error occurred';
+    return createErrorResponse('Failed to get response from chat API', 500, message);
   }
 } 

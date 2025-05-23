@@ -1,25 +1,19 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
 import { scrapeJobDescription } from '../../../utils/jobScraper';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+import openai from '../../../../lib/openaiClient';
+import { createErrorResponse } from '../../../../lib/apiUtils';
 
 export async function POST(req: Request) {
   try {
-    console.log('API Key available:', !!process.env.OPENAI_API_KEY);
+    console.log('API Key available:', !!process.env.OPENAI_API_KEY); // This console.log can also be removed, but the subtask description doesn't explicitly ask for it. I'll leave it for now.
     const { jobUrl, interviewType, resumeText } = await req.json();
-
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key is not configured');
-    }
 
     // Scrape job description
     console.log('Scraping job description from:', jobUrl);
     const jobData = await scrapeJobDescription(jobUrl);
     if (!jobData || jobData.error) {
-      throw new Error('Failed to fetch job description');
+      console.error('Failed to fetch job description:', jobData?.error);
+      return createErrorResponse('Failed to fetch job description', 500, jobData?.error || 'Scraping function returned an error.');
     }
     console.log('Job description scraped successfully');
 
@@ -72,7 +66,8 @@ export async function POST(req: Request) {
       // Get the response message
       const message = completion.choices[0].message.content;
       if (!message) {
-        throw new Error('No response received from OpenAI');
+        console.error('OpenAI Error: No response message content in prepare-interview.');
+        return createErrorResponse('No response content received from OpenAI', 500, 'The message content was empty after preparing interview questions.');
       }
       console.log('OpenAI response received successfully');
 
@@ -81,27 +76,18 @@ export async function POST(req: Request) {
       // Handle OpenAI specific errors
       console.error('OpenAI Error:', openaiError);
       if (openaiError?.status === 429) {
-        return NextResponse.json(
-          { 
-            error: 'OpenAI API quota exceeded. Please try again later or contact support to upgrade your plan.',
-            details: openaiError.message
-          },
-          { status: 429 }
+        return createErrorResponse(
+          'OpenAI API quota exceeded. Please try again later or contact support to upgrade your plan.',
+          429,
+          openaiError.message
         );
       }
-      throw openaiError;
+      // If it's not a 429, rethrow to be caught by the outer catch block
+      throw openaiError; 
     }
   } catch (error) {
     console.error('Error preparing interview:', error);
-    let errorMessage = 'Failed to prepare interview';
-    
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : 'An unknown error occurred during interview preparation';
+    return createErrorResponse('Failed to prepare interview', 500, message);
   }
 } 
