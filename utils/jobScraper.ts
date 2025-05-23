@@ -54,5 +54,3 @@ export async function scrapeJobDescription(url: string): Promise<JobData> {
     }
   }
 }
-
-// Remove or update the analyze-job.ts file if it's not needed 
